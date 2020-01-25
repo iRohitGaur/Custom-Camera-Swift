@@ -10,7 +10,7 @@
         <!--Entry View Controller-->
         <scene sceneID="feG-7B-2yD">
             <objects>
-                <viewController id="H4e-Vw-BEc" customClass="EntryViewController" customModule="CustomCamera" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="H4e-Vw-BEc" customClass="EntryViewController" customModule="CustomCam" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7dI-nq-b7Y"/>
                         <viewControllerLayoutGuide type="bottom" id="Jat-fl-NuS"/>
@@ -21,6 +21,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NwB-gu-njk">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="431"/>
+                                <color key="backgroundColor" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="FRONT CAMERA">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -30,6 +31,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4DB-0T-acm">
                                 <rect key="frame" x="0.0" y="431" width="414" height="431"/>
+                                <color key="backgroundColor" red="0.47684186699999997" green="0.50480759139999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="BACK CAMERA">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -61,7 +63,7 @@
         <!--Record View Controller-->
         <scene sceneID="yaB-hf-sdk">
             <objects>
-                <viewController id="dNw-bC-1xV" customClass="RecordViewController" customModule="CustomCamera" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dNw-bC-1xV" customClass="RecordViewController" customModule="CustomCam" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XA1-0B-uUb"/>
                         <viewControllerLayoutGuide type="bottom" id="TqJ-dj-0nU"/>
@@ -96,47 +98,18 @@
                                     <constraint firstItem="2xA-cf-cUI" firstAttribute="leading" secondItem="yYk-Eb-tch" secondAttribute="leading" constant="8" id="vxH-ah-MvK"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CwL-9l-vRg">
-                                <rect key="frame" x="20" y="121" width="374" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="84M-6i-uTw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Mom" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="td6-lM-7wT">
-                                <rect key="frame" x="20" y="74" width="374" height="39"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="39" id="iFt-JK-JM8"/>
-                                </constraints>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                                <connections>
-                                    <outlet property="delegate" destination="dNw-bC-1xV" id="Set-ln-eGM"/>
-                                </connections>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="CwL-9l-vRg" firstAttribute="leading" secondItem="xCM-uQ-42k" secondAttribute="leadingMargin" id="EC4-dj-s19"/>
-                            <constraint firstItem="td6-lM-7wT" firstAttribute="trailing" secondItem="xCM-uQ-42k" secondAttribute="trailingMargin" id="Jb9-Mn-hcv"/>
                             <constraint firstAttribute="bottom" secondItem="yYk-Eb-tch" secondAttribute="bottom" id="Mxk-Ye-EGl"/>
-                            <constraint firstItem="td6-lM-7wT" firstAttribute="top" secondItem="XA1-0B-uUb" secondAttribute="bottom" constant="30" id="Sss-hY-34p"/>
                             <constraint firstItem="yYk-Eb-tch" firstAttribute="leading" secondItem="xCM-uQ-42k" secondAttribute="leading" id="VSD-lt-bSE"/>
-                            <constraint firstItem="CwL-9l-vRg" firstAttribute="top" secondItem="td6-lM-7wT" secondAttribute="bottom" constant="8" id="a6n-9E-1bg"/>
-                            <constraint firstItem="td6-lM-7wT" firstAttribute="leading" secondItem="xCM-uQ-42k" secondAttribute="leadingMargin" id="eqR-sB-CB1"/>
                             <constraint firstItem="yYk-Eb-tch" firstAttribute="top" secondItem="xCM-uQ-42k" secondAttribute="top" constant="-55" id="fGe-tY-nMr"/>
-                            <constraint firstItem="CwL-9l-vRg" firstAttribute="trailing" secondItem="xCM-uQ-42k" secondAttribute="trailingMargin" id="p42-Um-QSI"/>
                             <constraint firstAttribute="trailing" secondItem="yYk-Eb-tch" secondAttribute="trailing" id="rpK-UG-BXR"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="PZS-TD-Hz5"/>
                     <connections>
-                        <outlet property="nameField" destination="td6-lM-7wT" id="mBX-UT-ZsQ"/>
                         <outlet property="recordButton" destination="2xA-cf-cUI" id="kp3-mF-pOl"/>
-                        <outlet property="timerLabel" destination="CwL-9l-vRg" id="ilC-dk-5BV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ngU-3Y-kob" sceneMemberID="firstResponder"/>

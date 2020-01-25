@@ -13,13 +13,7 @@ import Photos
 
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate {
     
-    @IBOutlet weak var nameField: UITextField!
-    @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
-    var timer = Timer()
-    var seconds = 0
-    var minutes = 0
-    var hours = 0
     
     let captureSession = AVCaptureSession()
     var backCamera: AVCaptureDevice?
@@ -36,8 +30,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setupInputOutput()
         setupPreviewLayer()
         startRunningCaptureSession()
-        setUserDefaults()
-        setTapGesture()
         
         NotificationCenter.default.addObserver(self, selector: #selector(customStop(_:)), name: NSNotification.Name(rawValue: "stop"), object: nil)
      }
@@ -56,38 +48,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let outputPath = NSTemporaryDirectory() + "output.mov"
         let outputFileURL = URL(fileURLWithPath: outputPath)
         videoFileOutput?.startRecording(to: outputFileURL, recordingDelegate: self)
-        
-        timer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
-    }
-    
-    @objc func handleTap (gesture: UITapGestureRecognizer) {
-        UserDefaults.standard.set(nameField.text, forKey: "name")
-        view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        UserDefaults.standard.set(nameField.text, forKey: "name")
-        view.endEditing(true)
-        return true
-    }
-    
-    @objc func updateCounter() {
-        seconds += 1
-        if (seconds < 60) {
-            timerLabel.text = String(format:"%02d", minutes) + ":" + String(format: "%02d", seconds)
-            if (hours > 0) {
-                timerLabel.text = String(format:"%02d", hours) + ":" + String(format:"%02d", minutes) + ":" + String(format: "%02d", seconds)
-            }
-        } else {
-            minutes += 1
-            seconds = 0
-        }
-        if (minutes > 59) {
-            hours += 1
-            minutes = 0
-            seconds = 0
-            timerLabel.text = String(format:"%02d", hours) + ":" + String(format:"%02d", minutes) + ":" + String(format: "%02d", seconds)
-        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -142,21 +102,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         captureSession.startRunning()
     }
     
-    func setUserDefaults() {
-        if (UserDefaults.standard.string(forKey: "name") == nil || UserDefaults.standard.string(forKey: "name") == "") {
-            nameField.text = "Mom"
-        } else {
-            nameField.text = UserDefaults.standard.string(forKey: "name")
-        }
-    }
-    
-    func setTapGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(gesture:)))
-        tapGesture.delegate = self
-        tapGesture.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(tapGesture)
-    }
-    
     // MARK: - Action methods
     
     @objc func customStop(_ sender: Any) {
@@ -167,15 +112,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         videoFileOutput?.stopRecording()
     }
     
-    
     // MARK: - AVCaptureFileOutputRecordingDelegate methods
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error != nil {
             print(error ?? "default")
             return
         }
-        
-        //performSegue(withIdentifier: "playVideo", sender: outputFileURL)
         
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
@@ -188,14 +130,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             DispatchQueue.main.async {
                 self.dismiss(animated: false, completion: nil)
             }
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "playVideo" {
-            let videoPlayerViewController = segue.destination as! AVPlayerViewController
-            let videoFileURL = sender as! URL
-            videoPlayerViewController.player = AVPlayer(url: videoFileURL)
         }
     }
 }
