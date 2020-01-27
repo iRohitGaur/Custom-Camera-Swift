@@ -94,8 +94,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         cameraPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         cameraPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraPreviewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-        cameraPreviewLayer?.frame = self.view.frame
-        self.view.layer.insertSublayer(cameraPreviewLayer!, at: 0)
+        cameraPreviewLayer?.frame = CGRectFromString("{{50,50},{200,200}}")
+        self.view.layer.insertSublayer(cameraPreviewLayer!, above: self.view.layer)
     }
     
     func startRunningCaptureSession() {
@@ -122,7 +122,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
         }) { saved, error in
-            print("err: ", error ?? "default message")
+            print("err: ", error ?? "No error")
             if saved {
                 print("saved")
             }
