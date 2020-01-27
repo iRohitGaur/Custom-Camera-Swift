@@ -95,6 +95,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             let captureDeviceInput = try AVCaptureDeviceInput(device: currentDevice!)
             captureSession.addInput(captureDeviceInput)
             videoFileOutput = AVCaptureMovieFileOutput()
+            
+            // Add audio device to the recording
+            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
+            do {
+                let audioInput = try AVCaptureDeviceInput(device: audioDevice)
+                self.captureSession.addInput(audioInput)
+            } catch {
+                print("Unable to add audio device to the recording.")
+            }
             captureSession.addOutput(videoFileOutput!)
         } catch {
             print(error)

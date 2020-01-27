@@ -14,6 +14,7 @@ class EntryViewController: UIViewController {
 
     var flag1 = 1
     var flag2 = 1
+    var flag3 = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,10 +46,10 @@ class EntryViewController: UIViewController {
     }
     
     func goToNextScreen() {
-        if (flag1 == 0 && flag2 == 0) {
+        if (flag1 == 0 && flag2 == 0 && flag3 == 0) {
             self.performSegue(withIdentifier: "callScreen", sender: nil)
         } else {
-            alertUser(withMessage: "Please Grant Access of Camera and Photo Library in order to proceed further. Go to Settings > rPhone.")
+            alertUser(withMessage: "Please Grant Access of Camera, Microphone and Photo Library in order to proceed further. Go to Settings > CustomCam.")
         }
     }
     
@@ -63,12 +64,22 @@ class EntryViewController: UIViewController {
             }
         }
         
-        //Photos
-        PHPhotoLibrary.requestAuthorization({status in
-            if status == .authorized{
+        //Camera
+        AVCaptureDevice.requestAccess(for: AVMediaType.audio) { response in
+            if response {
+                //access granted
                 self.flag2 = 0
             } else {
                 self.flag2 = 1
+            }
+        }
+        
+        //Photos
+        PHPhotoLibrary.requestAuthorization({status in
+            if status == .authorized{
+                self.flag3 = 0
+            } else {
+                self.flag3 = 1
             }
         })
     }
