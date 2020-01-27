@@ -11,7 +11,7 @@ import AVFoundation
 import AVKit
 import Photos
 
-class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate {
+class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate  {
     
     @IBOutlet weak var recordButton: UIButton!
     
@@ -21,6 +21,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var currentDevice: AVCaptureDevice?
     var videoFileOutput:AVCaptureMovieFileOutput?
     var cameraPreviewLayer:AVCaptureVideoPreviewLayer?
+    var cameraParentView = UIView()
+    
+    private var panGesture: UIPanGestureRecognizer?
+    private var pinchGesture: UIPinchGestureRecognizer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +34,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setupInputOutput()
         setupPreviewLayer()
         startRunningCaptureSession()
+        
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        view.isUserInteractionEnabled = true
+        panGesture?.delegate = self
+        view.addGestureRecognizer(panGesture!)
+        
+        pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
+        pinchGesture?.delegate = self
+        view.addGestureRecognizer(pinchGesture!)
         
         NotificationCenter.default.addObserver(self, selector: #selector(customStop(_:)), name: NSNotification.Name(rawValue: "stop"), object: nil)
      }
@@ -43,8 +56,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        UIDevice.current.isProximityMonitoringEnabled = true
-        //UIDevice.current.proximityState = true
         let outputPath = NSTemporaryDirectory() + "output.mov"
         let outputFileURL = URL(fileURLWithPath: outputPath)
         videoFileOutput?.startRecording(to: outputFileURL, recordingDelegate: self)
@@ -91,10 +102,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     
     func setupPreviewLayer() {
+        cameraParentView.frame = CGRectFromString("{{50,50},{200,260}}")
         cameraPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         cameraPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         cameraPreviewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-        cameraPreviewLayer?.frame = CGRectFromString("{{50,50},{200,200}}")
+        cameraPreviewLayer?.frame = cameraParentView.frame
         self.view.layer.insertSublayer(cameraPreviewLayer!, above: self.view.layer)
     }
     
@@ -115,21 +127,43 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     // MARK: - AVCaptureFileOutputRecordingDelegate methods
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error != nil {
-            print(error ?? "default")
+            print("err: ", error!)
             return
         }
         
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)
         }) { saved, error in
-            print("err: ", error ?? "No error")
+            if error != nil {
+                print("err: ", error!)
+                return
+            }
             if saved {
                 print("saved")
             }
-            //exit(0)
             DispatchQueue.main.async {
                 self.dismiss(animated: false, completion: nil)
             }
         }
+    }
+    
+    // MARK: - Gesture Methods
+    @objc func handlePan(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: cameraParentView)
+        cameraParentView.center = CGPoint(x: cameraParentView.center.x + translation.x, y: cameraParentView.center.y + translation.y)
+        cameraPreviewLayer?.frame = cameraParentView.frame
+        sender.setTranslation(CGPoint.zero, in: cameraParentView)
+    }
+    
+    @objc func handlePinch(sender: UIPinchGestureRecognizer) {
+        cameraParentView.transform = cameraParentView.transform.scaledBy(x: sender.scale, y: sender.scale)
+        cameraPreviewLayer?.frame = cameraParentView.frame
+        sender.scale = 1
+    }
+    
+    //MARK:- UIGestureRecognizerDelegate Methods
+    @objc func gestureRecognizer(_: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
+        return true
     }
 }

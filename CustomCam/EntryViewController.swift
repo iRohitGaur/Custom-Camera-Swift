@@ -21,7 +21,7 @@ class EntryViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         requestForCameraAndLibraryAccess()
-        UIDevice.current.isProximityMonitoringEnabled = true
+        //UIDevice.current.isProximityMonitoringEnabled = false
     }
     
     override var prefersStatusBarHidden: Bool {
